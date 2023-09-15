@@ -1,0 +1,25 @@
+body{
+    font-family: 'Nunito Semibold', sans-serif;
+    text-align: center;
+}
+
+
+#grid-container {
+    display: grid;
+    margin:0 auto;
+}
+
+#grid-container div{
+    background: grey;
+    border: 1px solid lightgrey;
+
+}
+
+#grid-container div:nth-child(even){
+    background: rgba(0, 156, 247, 0.767);
+    
+
+}
+#container {
+    display: flex;
+}
