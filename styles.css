@@ -1,8 +1,14 @@
 body{
     font-family: 'Nunito Semibold', sans-serif;
     text-align: center;
+    display: flex;
+    flex-direction: column;
 }
 
+
+#container {
+    display: flex;
+}
 
 #grid-container {
     display: grid;
@@ -10,16 +16,6 @@ body{
 }
 
 #grid-container div{
-    background: grey;
+    background: white;
     border: 1px solid lightgrey;
-
-}
-
-#grid-container div:nth-child(even){
-    background: rgba(0, 156, 247, 0.767);
-    
-
-}
-#container {
-    display: flex;
 }
