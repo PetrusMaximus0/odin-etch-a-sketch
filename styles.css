@@ -25,7 +25,6 @@ button {
 }
 
 h1{
-    border: 2px solid red;
     width: auto;
     flex: 0 0 auto;
 }
@@ -47,7 +46,6 @@ h1{
 #grid-container {
     display: grid;
     margin:0 auto;
-    border: 2px solid red;
 }
 
 #grid-container div{
