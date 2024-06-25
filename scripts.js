@@ -1,126 +1,123 @@
-//GLOBALS
+// GLOBALS
 const gridSize = 512;
 let cellNumber = 16;
 let maxCellNumber = 48;
 
-//generates a grid with the input cell Numbers per side
-function generateGrid() {
-    deleteGrid();
-    //check if cellNumber is appropriate and adjust it if necessary
-    if(cellNumber > maxCellNumber) cellNumber = maxCellNumber;
-    else if (cellNumber <=0) cellNumber = 1;
-    //
-    cellSize = gridSize / cellNumber;
-    //
-    const gridContainer = document.getElementById("grid-container");
-    gridContainer.style.gridTemplateColumns = `repeat(${cellNumber}, ${cellSize}px)`;
-    gridContainer.style.gridAutoRows = `${cellSize}px`;
+// Generates a grid with the input cell Numbers per side
+const generateGrid = () => {
+	deleteGrid();
 
-    for (let i = 0; i<cellNumber*cellNumber; i++){
-        const cell = document.createElement('div');    
-        gridContainer.appendChild(cell);
-    }
-}
+	// Check if cellNumber is appropriate and adjust it if necessary
+	if (cellNumber > maxCellNumber) cellNumber = maxCellNumber;
+	else if (cellNumber <= 0) cellNumber = 1;
 
-//delete entire grid
-function deleteGrid(){
-    const gridContainer = document.getElementById("grid-container");
-    let child = gridContainer.lastElementChild;
-    while(child){
-        gridContainer.removeChild(child);
-        child = gridContainer.lastElementChild;
-    }
-    console.log("deleted grid cells");
+	//
+	cellSize = gridSize / cellNumber;
 
-}
+	//
+	const gridContainer = document.getElementById('grid-container');
 
-//toggles grid lines on or off on the sketch pad
-function toggleGridLines(){
-    const elements = document.querySelectorAll("#grid-container div");
-    elements.forEach(el => {
-        console.log(el.style.borderWidth);
-        if (el.style.borderWidth === "0px") 
-            el.style.borderWidth = "1px";
-        else 
-            el.style.borderWidth = "0px";
-    });
-}
+	gridContainer.style.gridTemplateColumns = `repeat(${cellNumber}, ${cellSize}px)`;
+	gridContainer.style.gridAutoRows = `${cellSize}px`;
+
+	for (let i = 0; i < cellNumber * cellNumber; i++) {
+		const cell = document.createElement('div');
+		gridContainer.appendChild(cell);
+	}
+};
+
+const deleteGrid = () => {
+	const gridContainer = document.getElementById('grid-container');
+	let child = gridContainer.lastElementChild;
+	while (child) {
+		gridContainer.removeChild(child);
+		child = gridContainer.lastElementChild;
+	}
+};
+
+// Toggles the grid lines on or off on the sketch pad
+const toggleGridLines = () => {
+	const elements = document.querySelectorAll('#grid-container div');
+
+	elements.forEach((el) => {
+		if (el.style.borderWidth === '0px') el.style.borderWidth = '1px';
+		else el.style.borderWidth = '0px';
+	});
+};
 
 //
-function setGridSize(){
-    let result = parseInt(prompt("Please choose the number of cells per side!", 16));
-    //if user didnt press cancel perform the change
-    //if it's a number we can atribute
-    
-    if(result && result!= NaN){             
-        cellNumber = result;
-        console.log(`cellNumber is now ${cellNumber}`);
-        return true;
-        
-    }
-    return false;
-    
-}
+const setGridSize = () => {
+	//
+	const result = parseInt(
+		prompt('Please choose the number of cells per side!', 16)
+	);
 
-let tempColor = "white";
-let brushColor = "black";
+	//
+	if (result && result != NaN) {
+		// Entered number is valid
+		cellNumber = result;
+		return true;
+	}
 
-//EVENT LISTENERS
-//EVENT LISTENERS FOR DRAWING
-const gridContainer = document.getElementById("grid-container");
+	return false;
+};
+
+// Declare the colors for the brush
+let tempColor = 'white';
+let brushColor = 'black';
+
+// Setup the event listeners for the grid container
+const gridContainer = document.getElementById('grid-container');
+
+// Holds the current mouse state
 let mouseClicked = false;
 
-gridContainer.addEventListener('mouseover', function(e){
-    tempColor = e.target.style.backgroundColor;
-    e.target.style.backgroundColor = brushColor;
-    if(mouseClicked) tempColor = brushColor; 
+gridContainer.addEventListener('mouseover', (e) => {
+	tempColor = e.target.style.backgroundColor;
+	e.target.style.backgroundColor = brushColor;
+	if (mouseClicked) {
+		tempColor = brushColor;
+	}
 });
 
-gridContainer.addEventListener('mouseout', function(e){
-    e.target.style.backgroundColor = tempColor;
+gridContainer.addEventListener(
+	'mouseout',
+	(e) => (e.target.style.backgroundColor = tempColor)
+);
+
+gridContainer.addEventListener('mousedown', () => {
+	mouseClicked = true;
+	tempColor = brushColor;
 });
 
-gridContainer.addEventListener('mousedown', function(e){ 
-    mouseClicked = true;
-    tempColor = brushColor;
-    e.preventDefault();   
+gridContainer.addEventListener('mouseup', () => (mouseClicked = false));
+
+gridContainer.addEventListener('mouseleave', () => (mouseClicked = false));
+
+// Set up the event listeners for the buttons
+//
+const gridSizeBtn = document.querySelector('#header .buttons .size');
+gridSizeBtn.addEventListener('click', () => {
+	if (setGridSize()) generateGrid();
 });
 
-gridContainer.addEventListener('mouseup', function(e){ 
-    mouseClicked = false;
+// Event listener for clearing the grid.
+const clearGridBtn = document.querySelector('#header .buttons .clear');
+clearGridBtn.addEventListener('click', (e) => {
+	const elements = document.querySelectorAll('#grid-container div');
+	elements.forEach((el) => {
+		el.style.backgroundColor = 'white';
+	});
+
+	generateGrid();
 });
 
-gridContainer.addEventListener('mouseleave', function(e){
-    mouseClicked = false;
-});
-//BUTTON EVENT LISTENERS
-
-let buttonElement = document.querySelector("#header .buttons .size");
-buttonElement.addEventListener('click', function(e){
-    console.log(`we clicked at ${e.target}`);
-    if(setGridSize()) generateGrid();
-});
-
-buttonElement = document.querySelector("#header .buttons .clear");
-buttonElement.addEventListener('click', function(e){
-    const elements = document.querySelectorAll("#grid-container div");
-    elements.forEach(el=>{
-        el.style.backgroundColor = "white";
-    })
-    
-    console.log(`we clicked at ${e.target}`);
-    generateGrid();
-});
-
-buttonElement = document.querySelector("#header .buttons .toggleGrid");
-buttonElement.addEventListener('click', function(e){
-    console.log(`we clicked at ${e.target}`);
-    toggleGridLines();
-});
+// Event listener for toggling the grid lines
+const toggleGridBtn = document.querySelector('#header .buttons .toggleGrid');
+toggleGridBtn.addEventListener('click', (e) => toggleGridLines());
 
 //Run the code
-const header = document.querySelector("#header");
+const header = document.querySelector('#header');
 header.style.width = `${gridSize}px`;
+
 generateGrid();
-
-
